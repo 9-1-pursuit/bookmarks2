@@ -1,16 +1,17 @@
 const express = require('express')
-const reviews = express.Router()
+const reviews = express.Router({ mergeParams: true })
 const { getAllReviews, getReview, createReview, deleteReview, updateReview } = require('../queries/reviews')
 
 
 
 // INDEX
 reviews.get('/', async (req, res) => {
-    const allReviews = await getAllReviews()
-    if(allReviews[0]){
+    const { bookmarkId } = req.params
+    try {
+        const allReviews = await getAllReviews(bookmarkId)
         res.status(200).json(allReviews)
-    } else {
-        res.status(500).json({ error: "Server not working" })
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error'})
     }
 })
 
