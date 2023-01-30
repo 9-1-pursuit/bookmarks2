@@ -1,21 +1,25 @@
 const express = require("express");
 const bookmarks = express.Router();
-const { checkName, checkBoolean, validateURL } = require("../validations/checkBookmarks.js");
+const {
+  checkName,
+  checkBoolean,
+  validateURL,
+} = require("../validations/checkBookmarks.js");
 const {
   getAllBookmarks,
   getBookmark,
   createBookmark,
   deleteBookmark,
-  updateBookmark
+  updateBookmark,
 } = require("../queries/bookmarks");
 // Importing reviews controller
-const reviewsController = require('./reviewsController')
+const reviewsController = require("./reviewsController");
 
-
-bookmarks.use('/:bookmarkId/reviews', reviewsController)
+bookmarks.use("/:bookmarkId/reviews", reviewsController);
 
 // INDEX
 bookmarks.get("/", async (req, res) => {
+  console.log("hit GET /bookmarks");
   const allBookmarks = await getAllBookmarks();
   if (allBookmarks[0]) {
     res.status(200).json(allBookmarks);
@@ -46,28 +50,32 @@ bookmarks.post("/", checkName, checkBoolean, async (req, res) => {
   }
 });
 
-
 // DELETE
 bookmarks.delete("/:id", async (req, res) => {
   try {
-    const { id } = req.params
-    const deletedBookmark = await deleteBookmark(id)
-    res.status(200).json(deletedBookmark)
+    const { id } = req.params;
+    const deletedBookmark = await deleteBookmark(id);
+    res.status(200).json(deletedBookmark);
   } catch (error) {
-    res.status(404).json({ error: "id not found" })
+    res.status(404).json({ error: "id not found" });
   }
-})
+});
 
 // UPDATE
-bookmarks.put("/:id", checkName, checkBoolean, validateURL, async (req, res) => {
-  try {
-    const { id } = req.params
-    const updatedBookmark = await updateBookmark(id, req.body)
-    res.status(200).json(updatedBookmark)
-  } catch (error) {
-    res.status(404).json({ error: "bookmark not found" })
+bookmarks.put(
+  "/:id",
+  checkName,
+  checkBoolean,
+  validateURL,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updatedBookmark = await updateBookmark(id, req.body);
+      res.status(200).json(updatedBookmark);
+    } catch (error) {
+      res.status(404).json({ error: "bookmark not found" });
+    }
   }
-})
-
+);
 
 module.exports = bookmarks;
