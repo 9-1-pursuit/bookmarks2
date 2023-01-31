@@ -5,6 +5,7 @@ const getAllBookmarks = async () => {
     const allBookmarks = await db.any("SELECT * FROM bookmarks");
     return allBookmarks;
   } catch (error) {
+    console.log("db error", error);
     return error;
   }
 };
@@ -31,27 +32,36 @@ const createBookmark = async (bookmark) => {
   }
 };
 
-
 // DELETE
 const deleteBookmark = async (id) => {
   try {
-    const deletedBookmark = await db.one('DELETE FROM bookmarks WHERE id=$1 RETURNING *', id)
-    return deletedBookmark
+    const deletedBookmark = await db.one(
+      "DELETE FROM bookmarks WHERE id=$1 RETURNING *",
+      id
+    );
+    return deletedBookmark;
   } catch (error) {
-    return error
+    return error;
   }
-}
-
+};
 
 // UPDATE
 const updateBookmark = async (id, bookmark) => {
   try {
-    const updatedBookmark = await db.one("UPDATE bookmarks SET url=$1, name=$2, category=$3, is_favorite=$4 WHERE id=$5 RETURNING *", [bookmark.url, bookmark.name, bookmark.category, bookmark.is_favorite, id])
-    return updatedBookmark
+    const updatedBookmark = await db.one(
+      "UPDATE bookmarks SET url=$1, name=$2, category=$3, is_favorite=$4 WHERE id=$5 RETURNING *",
+      [bookmark.url, bookmark.name, bookmark.category, bookmark.is_favorite, id]
+    );
+    return updatedBookmark;
   } catch (error) {
-    return error
+    return error;
   }
-}
+};
 
-
-module.exports = { getAllBookmarks, getBookmark, createBookmark, deleteBookmark, updateBookmark };
+module.exports = {
+  getAllBookmarks,
+  getBookmark,
+  createBookmark,
+  deleteBookmark,
+  updateBookmark,
+};
