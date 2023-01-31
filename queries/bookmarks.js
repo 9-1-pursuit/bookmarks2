@@ -1,6 +1,7 @@
 const db = require("../db/dbConfig");
 
 const getAllBookmarks = async () => {
+  console.log("hit getAll bookMarks");
   try {
     const allBookmarks = await db.any("SELECT * FROM bookmarks");
     return allBookmarks;
